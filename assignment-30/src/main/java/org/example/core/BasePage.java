@@ -31,4 +31,20 @@ public class BasePage {
             Thread.currentThread().interrupt();
         }
     }
+
+    public void waitForUrlContains(String value) {
+        wait.until(ExpectedConditions.urlContains(value));
+    }
+
+    public boolean verifyCurrentUrl(String expectedRoute) {
+        try {
+            waitForUrlContains(expectedRoute);
+
+            String currentUrl = driver.getCurrentUrl();
+
+            return currentUrl.endsWith(expectedRoute);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

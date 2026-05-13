@@ -51,4 +51,11 @@ public class LoginPage extends BasePage {
         waitForElementToBeVisible(popUpError);
         return popUpError.isDisplayed();
     }
+
+    public String getFlashMessageText() {
+        waitForElementToBeVisible(popUpError);
+        String text = popUpError.getText().trim();
+
+        return text.replace("×", "").trim();
+    }
 }

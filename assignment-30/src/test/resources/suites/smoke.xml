@@ -2,7 +2,9 @@
 
 <suite name="Smoke Suite" parallel="tests" thread-count="2">
 
-    <parameter name="browser" value="chrome"/>
+    <listeners>
+        <listener class-name="core.TestListener"/>
+    </listeners>
 
     <test name="Login Tests">
         <classes>

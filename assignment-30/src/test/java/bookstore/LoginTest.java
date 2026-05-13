@@ -12,6 +12,11 @@ public class LoginTest extends BaseTest {
 
     private static final Logger logger = LogManager.getLogger(LoginTest.class);
 
+    public void verifyUserStayAtLoginPage(LoginPage loginPage) {
+        logger.info("Verify user still at the same page if form validation failed");
+        Assert.assertTrue(loginPage.verifyCurrentUrl("/bookstore/user/signin"), "User should stay at the same page (login page) if authorization failed");
+    }
+
     @Test(priority = 1, groups = {"smoke"}, description = "Test successful login with valid credentials", retryAnalyzer = core.RetryAnalyzer.class)
     public void testLoginSuccessWithValidCredentials() {
         logger.info("Starting login test with valid registered user credentials");
@@ -33,8 +38,11 @@ public class LoginTest extends BaseTest {
         logger.info("User attempts login using valid email and incorrect password");
         loginPage.login(config.getProperty("emailUser"), config.getProperty("incorrectPassword"));
 
+        verifyUserStayAtLoginPage(loginPage);
+
         logger.info("Verify user login fails and error message is displayed");
-        Assert.assertTrue(loginPage.verifyLoginFailed(),"User should be able to see the error message after logging in with invalid credentials");
+        Assert.assertTrue(loginPage.verifyLoginFailed(),"User should be able to see the error message after login with incorrect password");
+        Assert.assertEquals(loginPage.getFlashMessageText(), "Incorrect password", "User should be able to see the error message 'Incorrect password' after login with incorrect password");
         logger.info("testLoginFailedWithIncorrectPassword executed successfully");
     }
 
@@ -46,8 +54,11 @@ public class LoginTest extends BaseTest {
         logger.info("User attempts login using unregistered account credentials");
         loginPage.login(config.getProperty("emailUnregisteredUser"), config.getProperty("incorrectPassword"));
 
+        verifyUserStayAtLoginPage(loginPage);
+
         logger.info("Verify unregistered account login fails and error message is displayed");
-        Assert.assertTrue(loginPage.verifyLoginFailed(),"User should be able to see the error message after logging in with invalid credentials");
+        Assert.assertTrue(loginPage.verifyLoginFailed(),"User should be able to see the error message after login with unregistered account");
+        Assert.assertEquals(loginPage.getFlashMessageText(), "No user found with the given email address", "User should be able to see the error message 'No user found with the given email address' after login with incorrect password");
         logger.info("testLoginFailedWithUnregisteredAccount executed successfully");
     }
 
@@ -59,8 +70,11 @@ public class LoginTest extends BaseTest {
         logger.info("User attempts login using unregistered account credentials");
         loginPage.login("", "");
 
+        verifyUserStayAtLoginPage(loginPage);
+
         logger.info("Verify empty credentials login fails and error message is displayed");
-        Assert.assertTrue(loginPage.verifyLoginFailed(),"User should be able to see the error message after logging in with invalid credentials");
+        Assert.assertTrue(loginPage.verifyLoginFailed(),"User should be able to see the error message after login with empty credentials");
+        Assert.assertEquals(loginPage.getFlashMessageText(), "Missing credentials", "User should be able to see the error message 'Missing credentials' after login with incorrect password");
         logger.info("testLoginFailedWithEmptyCredentials executed successfully");
     }
 
@@ -72,8 +86,11 @@ public class LoginTest extends BaseTest {
         logger.info("User attempts login using invalid email format");
         loginPage.login(config.getProperty("usernameUser"), config.getProperty("passwordUser"));
 
+        verifyUserStayAtLoginPage(loginPage);
+
         logger.info("Verify empty credentials login fails and error message is displayed");
-        Assert.assertTrue(loginPage.verifyLoginFailed(),"User should be able to see the error message after logging in with invalid credentials");
+        Assert.assertTrue(loginPage.verifyLoginFailed(),"User should be able to see the error message after login with invalid email format");
+        Assert.assertEquals(loginPage.getFlashMessageText(), "Invalid email address", "User should be able to see the error message 'Invalid email address' after login with incorrect password");
         logger.info("testLoginFailedWithInvalidEmailFormat executed successfully");
     }
 }

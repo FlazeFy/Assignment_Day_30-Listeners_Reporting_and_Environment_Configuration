@@ -34,7 +34,7 @@ public class TestListener implements ITestListener {
         String reportPath = REPORT_DIR + "extent-report_" + timestamp + ".html";
 
         ExtentSparkReporter sparkReporter = new ExtentSparkReporter(reportPath);
-        sparkReporter.config().setReportName("Report Automation Saucedemo Web Batch 4");
+        sparkReporter.config().setReportName("Report Automation BookStore Web Batch 4");
         sparkReporter.config().setDocumentTitle("Automation Report Batch 4");
         sparkReporter.config().setTheme(Theme.STANDARD);
         sparkReporter.config().setEncoding("utf-8");
